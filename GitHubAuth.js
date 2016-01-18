@@ -60,17 +60,13 @@ function httpsReq (urlStr, method, headers, body) {
 		}
 	}
 	
-	
   	let urlObject = url.parse(urlStr);
-
-
     let options = {
         "host": urlObject.host,
         "path": urlObject.path,
         "method": method,
         "headers": passHeaders
     };
-
 	let promise = new Promise( function  (resolve, reject) {    
 		    let req = https.request(options, (res) => {
 		        let str = '';
