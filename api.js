@@ -3,33 +3,36 @@
 
 const Koa = require('koa');
 const app = new Koa();
-const GitHubAuth = require('./GitHubAuth');
+const Router = require('koa-router');
 
-app.use( async (ctx, next) => {
-	let path = ctx.path;
-	console.log(path);
-	let githubAuth = new GitHubAuth("aaabbb");
+const authRouter = require('./authRouter');
+const aboutRouter = require('./routers/about');
+const scheduleRouter = require('./routers/schedule');
 
-	if (path === '/api/github') {
-		let redirectUrl = githubAuth.redirectUrl;
-		ctx.redirect(redirectUrl);
-		return;
-	}
 
-	if (path === '/api/githubAccessToken') {
-		let code = ctx.query.code;
-		let state = ctx.query.state;
-
-		if (state === githubAuth.state) {
-			let response = await githubAuth.requestAccessToken(code);
-  			let info = await githubAuth.requestUserInfo(response);
-  			ctx.body = info
-		}else {
-			console.log("state not match");
-			ctx.body = "state not match";
-		}
-	}
-
+const indexRouter = new Router({
+	prefix: '/api/index'
 })
+
+indexRouter.get("/", (ctx, next) => {
+	ctx.body = {"content":"<h1>index card</h1>", "other":"index"}
+})
+
+//index
+app.use(indexRouter.routes())
+   .use(indexRouter.allowedMethods());
+
+
+//about
+app.use(aboutRouter.routes())
+   .use(aboutRouter.allowedMethods());
+
+app.use(scheduleRouter.routes())
+   .use(scheduleRouter.allowedMethods());
+
+// auth
+app.use(authRouter.routes())
+   .use(authRouter.allowedMethods());
+
 
 app.listen(3000);
