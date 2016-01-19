@@ -12,7 +12,9 @@ const githubOauthUrl = "https://github.com/login/oauth/authorize";
 const githubAccessTokenUrl = "https://github.com/login/oauth/access_token";
 const githubUserUrl = "https://api.github.com/user";
 
-const githubCallbackUrl = "http://127.0.0.1/fuckexperience/api/githubAccessToken";
+const githubCallbackUrl = "http://107.150.96.151/fuckexperience/auth.html";
+
+//http://127.0.0.1/fuckexperience/?code=c6258567016bf54ea0e6&state=aaabbb#/?_k=iu647t
 
 class GitHubAuth {
 
@@ -75,12 +77,12 @@ function httpsReq (urlStr, method, headers, body) {
 		            str += chunk;
 		        });
 		        res.on('end', function () {
-		        	console.log("str", str)
+		        	// console.log("str", str)
 		            resolve(str);
 		        });
 		    });
 		    req.on('error', (e) => {
-		    	console.log("e", e)
+		    	// console.log("e", e)
 		    	reject(e);
 		    });
 		    req.write(postData);
