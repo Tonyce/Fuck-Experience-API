@@ -5,8 +5,8 @@ const https = require('https');
 const url = require('url');
 const querystring = require('querystring');
 
-const gitHubClientId = "8764ca998aea75a3e1c7";
-const gitHubClientSecret = "d40ff6a3d4140e0f4e19a809647cc6bea41c63eb";
+const gitHubClientId = "";
+const gitHubClientSecret = "";
 
 const githubOauthUrl = "https://github.com/login/oauth/authorize";
 const githubAccessTokenUrl = "https://github.com/login/oauth/access_token";
