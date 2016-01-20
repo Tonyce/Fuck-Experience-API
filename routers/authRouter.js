@@ -4,6 +4,8 @@
 const Router = require('koa-router');
 const GitHubAuth = require('./GitHubAuth');
 
+const JWT = require('../JWT');
+
 const authRouter = new Router({
 	prefix: '/api/github'
 })
@@ -26,8 +28,28 @@ authRouter.get('/accessToken', async (ctx, next) => {
 
 	if (state === githubAuth.state) {
 		let response = await githubAuth.requestAccessToken(code);
-			let info = await githubAuth.requestUserInfo(response);
-			ctx.body = info
+		let info = await githubAuth.requestUserInfo(response);
+		
+		let infoObj = JSON.parse(info);
+		
+		let tokenInfo = {
+			userName: infoObj.login,
+			githubId: infoObj.id,
+			image: infoObj.avatar_url
+		}
+
+		// console.log(tokenInfo);
+
+		let authToken = JWT.signServerToken(tokenInfo);
+		tokenInfo = JWT.verifyServerToken(authToken);
+		console.log("github tokenInfo", tokenInfo);
+
+		ctx.cookies.set("token", authToken, {
+		// 	// signed: true 
+			path: "/fuckexperience",
+			expires: new Date().addDays(7)
+		});
+		ctx.body = info;
 	}else {
 		ctx.body = "state not match";
 	}

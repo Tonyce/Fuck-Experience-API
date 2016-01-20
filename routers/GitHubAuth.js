@@ -5,14 +5,14 @@ const https = require('https');
 const url = require('url');
 const querystring = require('querystring');
 
-const gitHubClientId = "";
-const gitHubClientSecret = "";
+const gitHubClientId = "8764ca998aea75a3e1c7";
+const gitHubClientSecret = "d40ff6a3d4140e0f4e19a809647cc6bea41c63eb";
 
 const githubOauthUrl = "https://github.com/login/oauth/authorize";
 const githubAccessTokenUrl = "https://github.com/login/oauth/access_token";
 const githubUserUrl = "https://api.github.com/user";
 
-const githubCallbackUrl = "http://107.150.96.151/fuckexperience/auth.html";
+const githubCallbackUrl = "http://127.0.0.1/fuckexperience/auth.html";
 
 //http://127.0.0.1/fuckexperience/?code=c6258567016bf54ea0e6&state=aaabbb#/?_k=iu647t
 
