@@ -9,7 +9,7 @@ exports.signServerToken = function signServerToken (tokenInfo) {
 	try {
 		token = jwt.sign(tokenInfo, serverTokenSecret, {"issuer": "ttangServer"});	
 	}catch (err) {
-		console.error("signServerToken err...", err)
+		// console.error("signServerToken err...", err)
 	}
 	return token;
 }
@@ -19,7 +19,7 @@ exports.verifyServerToken = function verifyServerToken (token) {
 	try {
 		tokenInfo = jwt.verify(token, serverTokenSecret);	
 	}catch (err) {
-		console.error("verifyServerToken err serverToken illegal..", err);
+		// console.error("verifyServerToken err serverToken illegal..", err);
 	}
 	return tokenInfo
 }
