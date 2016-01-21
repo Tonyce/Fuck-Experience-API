@@ -6,6 +6,7 @@ const app = new Koa();
 const Router = require('koa-router');
 
 const JWT = require('./JWT');
+const GitHubAuth = require('./routers/GitHubAuth');
  
 const authRouter = require('./routers/authRouter');
 const indexRouter = require('./routers/indexRouter');
@@ -18,7 +19,6 @@ const login = new Router({
 })
 
 login.get("/login", ctx => {
-	
 	let cookieObj = parseCookie(ctx.headers.cookie);
 	
 	// console.log("cookieObj", cookieObj);
@@ -57,6 +57,33 @@ login.get("/logout", ctx => {
 	});
 	ctx.body = {
 		login: false
+	}
+})
+
+
+login.get("/selfinfo", async (ctx) => {
+	let cookieObj = parseCookie(ctx.headers.cookie);
+	
+	// console.log("cookieObj", cookieObj);
+
+	let authToken = cookieObj.token;
+	let tokenInfo = JWT.verifyServerToken(authToken);
+
+	console.log(tokenInfo);
+
+	let code = tokenInfo.code;
+	let state = tokenInfo.state;
+
+	// let githubAuth = new GitHubAuth(state);
+	// let response = await githubAuth.requestAccessToken(code);
+	// let info = await githubAuth.requestUserInfo(response);
+
+	// console.log(info)
+
+	ctx.body = {
+		login: tokenInfo.userName,
+		id: tokenInfo.githubId,
+		avatar_url: tokenInfo.image
 	}
 })
 

@@ -29,7 +29,7 @@ authRouter.get('/accessToken', async (ctx, next) => {
 	if (state === githubAuth.state) {
 		let response = await githubAuth.requestAccessToken(code);
 		let info = await githubAuth.requestUserInfo(response);
-		
+
 		let infoObj = JSON.parse(info);
 		
 		let tokenInfo = {

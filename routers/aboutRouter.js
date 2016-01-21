@@ -9,7 +9,12 @@ const aboutRouter = new Router({
 })
 
 aboutRouter.get("/", (ctx, next) => {
-	ctx.body = {"content":"<h1>aboutRouter card</h1>", "other":"about"}
+	ctx.body = {
+		card: {
+			"content":"<h1>aboutRouter card</h1>", 
+			"other":"about"
+		}
+	}
 })
 
 module.exports = aboutRouter;

@@ -9,7 +9,12 @@ const scheduleRouter = new Router({
 })
 
 scheduleRouter.get("/:id", (ctx, next) => {
-	ctx.body = {"content":`<h1>scheduleRouter card</h1><p>${ctx.params.id}</p>`, "other":"scheduleRouter"}
+	ctx.body = {
+		card: {
+			"content":`<h1>scheduleRouter card</h1><p>${ctx.params.id}</p>`, 
+			"other":"scheduleRouter"
+		}
+	}
 })
 
 module.exports = scheduleRouter;
