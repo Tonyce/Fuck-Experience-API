@@ -17,18 +17,13 @@ router.get("/", (ctx, next) => {
 		"timeline": [
 			{
 				done: true,
-				time: new Date(),
+				time: new Date("2016-01-20"),
 				content: "完成 Github OAuth"
 			},
 			{
 				done: false,
 				time: new Date(),
-				content: "完成 Github OAuth"
-			},
-			{
-				done: false,
-				time: new Date(),
-				content: "完成 Github OAuth"
+				content: "Topic is going"
 			}
 		]
 	}
