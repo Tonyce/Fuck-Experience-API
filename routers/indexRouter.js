@@ -18,12 +18,12 @@ router.get("/", (ctx, next) => {
 			{
 				done: true,
 				time: new Date("2016-01-20"),
-				content: "完成 Github OAuth"
+				content: "完成 Github OAuth, 你可以点击 SING IN，登陆下看看，谢谢。"
 			},
 			{
 				done: false,
 				time: new Date(),
-				content: "Topic is going"
+				content: "Topic is going on"
 			}
 		]
 	}
