@@ -12,7 +12,7 @@ const githubOauthUrl = "https://github.com/login/oauth/authorize";
 const githubAccessTokenUrl = "https://github.com/login/oauth/access_token";
 const githubUserUrl = "https://api.github.com/user";
 
-const githubCallbackUrl = "http://tonyce.top/fuckexperience/auth.html";
+const githubCallbackUrl = "http://www.tonyce.top/fuckexperience/auth.html";
 
 //http://127.0.0.1/fuckexperience/?code=c6258567016bf54ea0e6&state=aaabbb#/?_k=iu647t
 
