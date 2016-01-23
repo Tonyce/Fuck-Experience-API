@@ -15,15 +15,23 @@ router.get("/", (ctx, next) => {
 			"other":"我们选择的是优秀，追求的是卓越，而不是工作经验。So，fuck experience",
 		},
 		"timeline": [
+
+			{
+				done: false,
+				time: new Date(),
+				content: "Topic is going on"
+			},
+
 			{
 				done: true,
 				time: new Date("2016-01-20"),
 				content: "完成 Github OAuth, 你可以点击 SING IN，登陆下看看，谢谢。"
 			},
+			
 			{
-				done: false,
-				time: new Date(),
-				content: "Topic is going on"
+				done: true,
+				time: new Date("2016-01-18"),
+				content: "开始FuckExperience"
 			}
 		]
 	}
