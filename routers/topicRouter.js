@@ -9,12 +9,14 @@ const router = new Router({
 })
 
 router.get("/", (ctx, next) => {
-	ctx.body = {
-		card: {
-			"content":"<h1>Topic card</h1>", 
-			"other":"Topic"
-		},
-		topics: [
+	// console.log(ctx.query);
+	let lastId = ctx.query.id;
+	if (lastId) {
+
+	}else {
+		
+	}
+	ctx.body =  [
 			{
 				id: 2,
 				title: "工作经验，只是说你老了而已",
@@ -34,7 +36,6 @@ router.get("/", (ctx, next) => {
 				time: new Date()
 			}
 		]
-	}
 })
 
 router.get('/:id', ctx => {
