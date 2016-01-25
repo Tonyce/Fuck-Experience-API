@@ -2,6 +2,7 @@
 'use strict';
 
 const Router = require('koa-router');
+const Topic = require('../model/Topic');
 
 
 const router = new Router({
@@ -47,4 +48,50 @@ router.get('/:id', ctx => {
 	}	
 })
 
+router.post('/new', async ctx => {
+	let body = await parserBody(ctx.req);
+	// console.log(body);
+	body = JSON.parse(body)
+	let result = "";
+	if (body && body.title && body.content) {
+		let topic = new Topic(null, body.title, body.content);
+		try {
+			await topic.save();
+		}catch (err){
+			result = {
+				err: err
+			}
+		}
+		result = {
+			ok: "ok"
+		}
+	}else {
+		result = {
+			err: "body is null"
+		};
+	}
+	ctx.body = result
+})
+
 module.exports = router;
+
+function parserBody (req) {
+	
+	// console.log(`HEADERS: ${JSON.stringify(req.headers)}`);
+	let promise = new Promise( (resolve, reject) => {    
+		let body = "";
+		req.setEncoding('utf8');
+		req.on('data', (chunk) => {
+			body += chunk;
+		});
+		req.on('end', () => {
+			// console.log('No more data in response.')
+			// console.log("body", body)
+			resolve(body);
+		})
+		req.on('error', (e) => {
+			reject(e);
+		})
+	})
+	return promise
+}

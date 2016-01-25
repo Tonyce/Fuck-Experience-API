@@ -4,7 +4,6 @@
 const Koa = require('koa');
 const app = new Koa();
 const Router = require('koa-router');
-
  
 const authRouter = require('./routers/authRouter');
 const loginRouter = require('./routers/loginRouter')
@@ -12,7 +11,9 @@ const indexRouter = require('./routers/indexRouter');
 const topicRouter = require('./routers/topicRouter');
 const scheduleRouter = require('./routers/schedule');
 
-
+const MongoClient = require('mongodb').MongoClient
+const ObjectID = require('mongodb').ObjectID;
+const mongoUrl = 'mongodb://localhost:27017/FuckExperience';
 
 //login
 app.use(loginRouter.routes())
@@ -35,7 +36,23 @@ app.use(authRouter.routes())
    .use(authRouter.allowedMethods());
 
 
-app.listen(3000);
+global._ObjectID = ObjectID;
+global._db = "";
+global._dataBase = "FuckExperience";
+
+MongoClient.connect(mongoUrl, function(err, db) {
+  	// console.log("connect mongodb...", err, db)
+  	if(err){
+		console.log("mongoClient open err", err)
+		return
+	}
+	_db = db;
+    // if (!module.parent) {
+		app.listen(3000);
+		console.log('listening on port 3000', new Date());
+	// }
+});
+
 
 
 function parserBody (req) {
