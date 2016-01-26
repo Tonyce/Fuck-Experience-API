@@ -42,7 +42,7 @@ router.post('/new', async ctx => {
 	let body = await parserBody(ctx.req);
 	// console.log("body", body);
 	if (!tokenInfo) {
-		ctx.body = result = {
+		ctx.body = {
 			err: "没有授权"
 		};
 		return;
@@ -75,7 +75,7 @@ router.post('/answer', async ctx => {
 	let tokenInfo = JWT.verifyServerToken(authToken);
 	let body = await parserBody(ctx.req);
 	if (!tokenInfo) {
-		ctx.body = result = {
+		ctx.body = {
 			err: "没有授权"
 		};
 		return;
