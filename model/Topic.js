@@ -1,6 +1,5 @@
 "use strict";
 
-var assert = require('assert');
 
 const topicCollection = "FuckExperience.topic"
 
@@ -46,6 +45,7 @@ class Topic {
 						reject(err)
 					}else {
 				        this.title = doc.title;
+				        this.author = doc.author;
 				        this.content = doc.content;
 				        this.read = doc.read;
 				        this.time = doc.time;
@@ -75,18 +75,16 @@ class Topic {
 		return promise;
 	}
 
-	update (updateInfo, callback) {
-        let collection = _db.collection(topicCollection);
-        collection.updateOne({"_id": this._id}, {$set: updateInfo}, (err, result) => {
-            assert.equal(err, null);
-            callback()
-        });   
-    }
+	// update (updateInfo, callback) {
+ //        let collection = _db.collection(topicCollection);
+ //        collection.updateOne({"_id": this._id}, {$set: updateInfo}, (err, result) => {
+ //            callback()
+ //        });   
+ //    }
 
     incRead (callback) {
     	let collection = _db.collection(topicCollection);
         collection.update({"_id": this._id}, { $inc: { read: 1} }, (err, result) => {
-            assert.equal(err, null);
             //console.log(result); //{ result: { ok: 1, nModified: 1, n: 1 },
             callback()
         }); 
@@ -117,7 +115,6 @@ class Topic {
 			}
 
 			collection.update({_id: this._id}, {$push: {"comments": commentBody}}, (err, result) => {
-				assert.equal(err, null);
 		        callback(null, {"time": time});
 		    });
 		});
