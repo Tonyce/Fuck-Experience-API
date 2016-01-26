@@ -4,57 +4,50 @@
 const Router = require('koa-router');
 const Topic = require('../model/Topic');
 
+const JWT = require('../JWT');
 
 const router = new Router({
 	prefix: '/api/topic'
 })
 
-router.get("/", (ctx, next) => {
-	// console.log(ctx.query);
+router.get("/", async (ctx, next) => {
 	let lastId = ctx.query.id;
-	if (lastId) {
-
-	}else {
-		
-	}
-	ctx.body =  [
-			{
-				id: 2,
-				title: "工作经验，只是说你老了而已",
-				authorName:"Tonyce",
-				time: new Date()
-			},
-			{
-				id: 3,
-				title: "比起工作经验，更好的是努力",
-				authorName:"Tonyce",
-				time: new Date()
-			},
-			{
-				id: 4,
-				title: "工作经验其实一文不值",
-				authorName:"Tonyce",
-				time: new Date()
-			}
-		]
+	ctx.body = await Topic.findTitles(lastId)
 })
 
-router.get('/:id', ctx => {
-	
-	ctx.body = {
-		id: "dsfa",
-		content: `<h1>Topic ${ctx.params.id}</h1>Topic`,
-		time: "fadfa"
-	}	
+router.get('/:id', async ctx => {
+	let id = ctx.params.id;
+	try {
+		id = new _ObjectID(id);
+	}catch (err) {
+		ctx.body = {
+			id: ctx.params.id,
+			content: "# error"
+		}	
+		return;
+	}
+	let topic = new Topic(id)
+	await topic.find();
+	ctx.body = topic;
 })
 
 router.post('/new', async ctx => {
+	let cookieObj = ctx.cookieObj;
+	// console.log("cookieObj", cookieObj);
+	let authToken = cookieObj.token;
+	let tokenInfo = JWT.verifyServerToken(authToken);
 	let body = await parserBody(ctx.req);
-	// console.log(body);
+	// console.log("body", body);
+	let author = {
+		githubId: tokenInfo.githubId,
+		name: tokenInfo.userName,
+		image: tokenInfo.image
+	}
+
 	body = JSON.parse(body)
 	let result = "";
 	if (body && body.title && body.content) {
-		let topic = new Topic(null, body.title, body.content);
+		let topic = new Topic(null, body.title, author, body.content);
 		try {
 			await topic.save();
 		}catch (err){

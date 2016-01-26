@@ -15,6 +15,15 @@ const MongoClient = require('mongodb').MongoClient
 const ObjectID = require('mongodb').ObjectID;
 const mongoUrl = 'mongodb://localhost:27017/FuckExperience';
 
+//middle
+
+app.use((ctx, next) => {
+	let cookieObj = parseCookie(ctx.headers.cookie);
+	ctx.cookieObj = cookieObj;
+	// next()
+	return next();
+})
+
 //login
 app.use(loginRouter.routes())
    .use(loginRouter.allowedMethods());
@@ -52,6 +61,25 @@ MongoClient.connect(mongoUrl, function(err, db) {
 		console.log('listening on port 3000', new Date());
 	// }
 });
+
+
+function parseCookie (cookie){
+	if ( typeof cookie !== "string" ) {
+		return ""
+	}
+	var cookieObjs = cookie.split(";");
+
+	var cookieObj = {};
+
+	for (var i = 0; i < cookieObjs.length; i++) {
+		var searchObjStr = cookieObjs[i];
+		var key = searchObjStr.split("=")[0];
+		key = key.replace(/\s+/g,'');
+		var value = searchObjStr.split("=")[1];
+		cookieObj[key] = value;
+	};
+	return cookieObj
+}
 
 
 

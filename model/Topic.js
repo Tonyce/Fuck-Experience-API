@@ -5,47 +5,56 @@ var assert = require('assert');
 const topicCollection = "FuckExperience.topic"
 
 class Topic {
-	constructor(_id, title, content) {
+	constructor(_id, title, author, content) {
 		this._id = _id; //
 		this.title = title;
+		this.author = author;
 		this.read = 0;
 		this.content = content;
 		this.time = new Date();
 	}
 
-	static findTitles (id, callback) {
-		let collection = _db.collection(topicCollection);	
-		if (id) {
-			collection.find({_id: {$lt: id}}, {"title": 1}).sort({"time": -1}).limit(10).toArray(function(err, docs){
-		        assert.equal(null, err);
-		        callback(null, docs);
+	static findTitles (id) {
+		let collection = _db.collection(topicCollection);
+		let promise = new Promise((resolve, reject) => {
+			let query = {}
+			if (id) {
+				try {
+					id = new _ObjectID(id);
+				}catch (err) {
+					reject(err)
+				}
+				query = {_id: {$lt: id}}
+			}
+			collection.find(query, {"title": 1, "author": 1, "time": 1}).sort({"time": -1}).limit(10).toArray((err, docs) => {
+		        if (err){
+		  	     	reject(err)
+		        }else {
+		        	resolve(docs);
+		        }
 			});
-		}else {
-			collection.find({}, {"title": 1}).sort({"time": -1}).limit(10).toArray(function(err, docs){
-		        assert.equal(null, err);
-		        callback(null, docs);
-			});
-		}
+		})	
+		return promise
 	}
 
-	find (callback) {
-		if ((this._id instanceof _ObjectID) === false) {
-			callback({err: "this._id is illeagel"})
-			return;
-		}
-		let collection = _db.collection(topicCollection);	
-		this.incRead(() => {
-			collection.findOne({_id: this._id}, (err, doc) => {
-		        assert.equal(null, err);
-		        assert.notEqual(null, doc);
-		        this.title = doc.title;
-		        this.content = doc.content;
-		        this.read = doc.read;
-		        this.time = doc.time;
-		        this.comments = doc.comments;
-		        callback()
-			});
-		})
+	find () {
+		let promise = new Promise( (resolve, reject)=> {
+			let collection = _db.collection(topicCollection);	
+			this.incRead(() => {
+				collection.findOne({_id: this._id}, (err, doc) => {
+					if (err) {
+						reject(err)
+					}else {
+				        this.title = doc.title;
+				        this.content = doc.content;
+				        this.read = doc.read;
+				        this.time = doc.time;
+				        resolve()
+				    }
+				});
+			})
+		});
+		return promise;
 	}
 
 	save () {
@@ -80,25 +89,6 @@ class Topic {
             assert.equal(err, null);
             //console.log(result); //{ result: { ok: 1, nModified: 1, n: 1 },
             callback()
-        }); 
-    }
-
-    incGood (callback) {
-    	let collection = _db.collection(topicCollection);
-        collection.update({"_id": this._id}, { $inc: { good: 1} }, (err, result) => {
-            assert.equal(err, null);
-            //console.log(result); //{ result: { ok: 1, nModified: 1, n: 1 },
-            callback(null, result.result);
-        }); 
-    }
-
-    incBad (callback) {
-    	let collection = _db.collection(topicCollection);
-        collection.update({"_id": this._id}, { $inc: { bad: 1} }, (err, result) => {
-            assert.equal(err, null);
-
-            //console.log(result); //{ result: { ok: 1, nModified: 1, n: 1 },
-            callback(null, result.result)
         }); 
     }
 
