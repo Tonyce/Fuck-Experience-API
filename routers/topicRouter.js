@@ -38,6 +38,12 @@ router.post('/new', async ctx => {
 	let tokenInfo = JWT.verifyServerToken(authToken);
 	let body = await parserBody(ctx.req);
 	// console.log("body", body);
+	if (!tokenInfo) {
+		ctx.body = result = {
+			err: "没有授权"
+		};
+		return;
+	}
 	let author = {
 		githubId: tokenInfo.githubId,
 		name: tokenInfo.userName,
