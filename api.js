@@ -17,12 +17,17 @@ const mongoUrl = 'mongodb://localhost:27017/FuckExperience';
 
 //middle
 
-app.use((ctx, next) => {
+app.use( async (ctx, next) => {
 	let cookieObj = parseCookie(ctx.headers.cookie);
 	ctx.cookieObj = cookieObj;
 	// next()
+	let body = await parserBody(ctx.req);
+	ctx.reqBody = body;
+
 	return next();
 })
+
+
 
 //login
 app.use(loginRouter.routes())
@@ -110,4 +115,25 @@ Date.prototype.addDays = function(days){
     date.setDate(date.getDate() + days);
     return date;
 };
+
+function parserBody (req) {
+	
+	// console.log(`HEADERS: ${JSON.stringify(req.headers)}`);
+	let promise = new Promise( (resolve, reject) => {    
+		let body = "";
+		req.setEncoding('utf8');
+		req.on('data', (chunk) => {
+			body += chunk;
+		});
+		req.on('end', () => {
+			// console.log('No more data in response.')
+			// console.log("body", body)
+			resolve(body);
+		})
+		req.on('error', (e) => {
+			reject(e);
+		})
+	})
+	return promise
+}
 

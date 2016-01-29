@@ -39,7 +39,7 @@ router.post('/new', async ctx => {
 	// console.log("cookieObj", cookieObj);
 	let authToken = cookieObj.token;
 	let tokenInfo = JWT.verifyServerToken(authToken);
-	let body = await parserBody(ctx.req);
+	
 	// console.log("body", body);
 	if (!tokenInfo) {
 		ctx.body = {
@@ -53,8 +53,8 @@ router.post('/new', async ctx => {
 		image: tokenInfo.image
 	}
 
-	body = JSON.parse(body)
 	let result = "";
+	let body = ctx.reqBody ? JSON.parse(ctx.reqBody) : {}
 	if (body && body.title && body.content) {
 		let topic = new Topic(null, body.title, author, body.content);
 		try {
@@ -73,7 +73,7 @@ router.post('/answer', async ctx => {
 	let cookieObj = ctx.cookieObj;
 	let authToken = cookieObj.token;
 	let tokenInfo = JWT.verifyServerToken(authToken);
-	let body = await parserBody(ctx.req);
+	
 	if (!tokenInfo) {
 		ctx.body = {
 			err: "没有授权"
@@ -89,7 +89,7 @@ router.post('/answer', async ctx => {
 
 	
 	let result = "";
-	body = JSON.parse(body);
+	let body = ctx.reqBody ? JSON.parse(ctx.reqBody) : {}
 	let topicId = body.topicId;
 		topicId = new _ObjectID(topicId);
 	let toUser = body.toUser;
@@ -107,24 +107,3 @@ router.post('/answer', async ctx => {
 })
 
 module.exports = router;
-
-function parserBody (req) {
-	
-	// console.log(`HEADERS: ${JSON.stringify(req.headers)}`);
-	let promise = new Promise( (resolve, reject) => {    
-		let body = "";
-		req.setEncoding('utf8');
-		req.on('data', (chunk) => {
-			body += chunk;
-		});
-		req.on('end', () => {
-			// console.log('No more data in response.')
-			// console.log("body", body)
-			resolve(body);
-		})
-		req.on('error', (e) => {
-			reject(e);
-		})
-	})
-	return promise
-}

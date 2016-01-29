@@ -19,7 +19,13 @@ router.get("/", (ctx, next) => {
 			{
 				done: false,
 				time: new Date(),
-				content: "schedule is going on"
+				content: "消息推送。。。。"
+			},
+
+			{
+				done: true,
+				time: new Date("2016-01-29"),
+				content: "schedule is done。（差email发送附件）"
 			},
 
 			{
