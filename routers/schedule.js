@@ -15,6 +15,8 @@ scheduleRouter.get("/:weekNum/:day", async (ctx, next) => {
 	let authToken = cookieObj.token;
 	let tokenInfo = JWT.verifyServerToken(authToken)
 
+	let cardWord = scheduleWord(day);
+	
 	if ( !tokenInfo ) {
 		ctx.body = {
 			card: cardWord,	
@@ -32,7 +34,7 @@ scheduleRouter.get("/:weekNum/:day", async (ctx, next) => {
 	// console.log(weekNum, day);
 	// console.log(tokenInfo)
 
-	let cardWord = scheduleWord(day);
+	
 	let items = await Schedule.findItems(githubId, day, weekNum, year)
 	ctx.body = {
 		card: cardWord,
