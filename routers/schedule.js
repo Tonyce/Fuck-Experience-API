@@ -48,10 +48,7 @@ scheduleRouter.post("/:weekNum/:day", async (ctx, next) => {
 	let tokenInfo = JWT.verifyServerToken(authToken)
 
 	if ( !tokenInfo ) {
-		ctx.body = {
-			card: cardWord,	
-			items: []
-		}
+		ctx.body = {}
 		return
 	}
 
