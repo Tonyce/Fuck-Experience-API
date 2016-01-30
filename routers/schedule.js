@@ -48,7 +48,7 @@ scheduleRouter.post("/:weekNum/:day", async (ctx, next) => {
 	let tokenInfo = JWT.verifyServerToken(authToken)
 
 	if ( !tokenInfo ) {
-		ctx.body = {}
+		ctx.body = {"err": "还没有登陆吧"}
 		return
 	}
 
@@ -83,7 +83,7 @@ scheduleRouter.put("/:id", async (ctx, next) => {
 	let tokenInfo = JWT.verifyServerToken(authToken)
 
 	if ( !tokenInfo ) {
-		ctx.body = {}
+		ctx.body = {"err": "还没有登陆吧"}
 		return
 	}
 
@@ -108,7 +108,7 @@ scheduleRouter.delete("/:id", async (ctx, next) => {
 	let tokenInfo = JWT.verifyServerToken(authToken)
 
 	if ( !tokenInfo ) {
-		ctx.body = {}
+		ctx.body = {"err": "还没有登陆吧"}
 		return
 	}
 
