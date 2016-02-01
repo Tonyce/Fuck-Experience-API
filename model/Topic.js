@@ -1,20 +1,21 @@
 "use strict";
 
+const MongoBase = require('./MongoBase');
 
 const topicCollection = "FuckExperience.topic"
 
-class Topic {
+class Topic extends MongoBase {
 	constructor(_id, title, author, content) {
-		this._id = _id; //
+		super(_id)
 		this.title = title;
 		this.author = author;
 		this.read = 0;
 		this.content = content;
-		this.time = new Date();
+		this.collection = _db.collection(topicCollection); 
 	}
 
 	static findTitles (id) {
-		let collection = _db.collection(topicCollection);
+		let collection = _db.collection(topicCollection); 
 		let promise = new Promise((resolve, reject) => {
 			let query = {}
 			if (id) {
@@ -38,9 +39,8 @@ class Topic {
 
 	find () {
 		let promise = new Promise( (resolve, reject)=> {
-			let collection = _db.collection(topicCollection);	
 			this.incRead(() => {
-				collection.findOne({_id: this._id}, (err, doc) => {
+				this.collection.findOne({_id: this._id}, (err, doc) => {
 					if (err) {
 						reject(err)
 					}else {
@@ -57,41 +57,15 @@ class Topic {
 		return promise;
 	}
 
-	save () {
-
-		let collection = _db.collection(topicCollection);
-		let promise = new Promise( (resolve, reject) => {    
-			collection.insertOne(this, (err, result) => {
-				// assert.equal(err, null);
-				// assert.equal(1, result.insertedCount);
-				if (err) {
-					reject(err)
-				}else {
-					this._id = result.insertedId;
-					resolve()	
-				}
-		    });
-		})
-		return promise;
-	}
-
-	// update (updateInfo, callback) {
- //        let collection = _db.collection(topicCollection);
- //        collection.updateOne({"_id": this._id}, {$set: updateInfo}, (err, result) => {
- //            callback()
- //        });   
- //    }
-
     incRead (callback) {
-    	let collection = _db.collection(topicCollection);
-        collection.update({"_id": this._id}, { $inc: { read: 1} }, (err, result) => {
+        this.collection.update({"_id": this._id}, { $inc: { read: 1} }, (err, result) => {
             //console.log(result); //{ result: { ok: 1, nModified: 1, n: 1 },
             callback()
         }); 
     }
 
 	insertComment (comment, ip, callback) {
-		let collection = _db.collection(topicCollection);
+
 
 		if (!comment) {
 			callback({"err":"不接受空的"});
@@ -114,14 +88,13 @@ class Topic {
 				"time": time
 			}
 
-			collection.update({_id: this._id}, {$push: {"comments": commentBody}}, (err, result) => {
+			this.collection.update({_id: this._id}, {$push: {"comments": commentBody}}, (err, result) => {
 		        callback(null, {"time": time});
 		    });
 		});
 	}
 
 	findComment(ip, compareTime, callback) {
-		let collection = _db.collection(topicCollection);
 		let query = {
 			"_id": this._id, 	
 			"comments": { 
@@ -132,7 +105,7 @@ class Topic {
 			} 
 		}
 
-		collection.findOne(query, (err, doc) => {
+		this.collection.findOne(query, (err, doc) => {
 			callback(err, doc && doc.comments)
 		});
 	}

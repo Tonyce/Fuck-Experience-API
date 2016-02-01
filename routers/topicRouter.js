@@ -30,17 +30,15 @@ router.get('/:id', async ctx => {
 	let topic = new Topic(id)
 	await topic.find();
 	topic.answers = await TopicAnswer.find(topic._id);
-	// console.log(topic);
+	topic.collection = ""
 	ctx.body = topic;
 })
 
 router.post('/new', async ctx => {
 	let cookieObj = ctx.cookieObj;
-	// console.log("cookieObj", cookieObj);
 	let authToken = cookieObj.token;
 	let tokenInfo = JWT.verifyServerToken(authToken);
 	
-	// console.log("body", body);
 	if (!tokenInfo) {
 		ctx.body = {
 			err: "没有授权"
